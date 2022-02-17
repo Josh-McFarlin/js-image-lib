@@ -1,0 +1,14 @@
+out/
+build/
+coverage/
+dist/
+node_modules/
+.idea_modules/
+.idea/
+
+examples/
+docs/
+
+rollup.config.js
+jest.config.js
+jest.setup.ts

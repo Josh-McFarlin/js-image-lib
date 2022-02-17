@@ -1,0 +1,92 @@
+---
+sidebar_position: 3
+---
+
+# Transformer
+
+```typescript jsx
+import { imageTransformer } from "js-image-lib";
+
+const image: Uint8Array = ...;
+const transformOptions = {
+  width: 100,
+};
+
+const newImage = imageTransformer({
+  data: image
+}, transformOptions);
+```
+
+## Parameters
+|          Name          |                     Type                     | Required | Default |                                                                  Description                                                                  |
+|:----------------------:|:--------------------------------------------:|:--------:|:-------:|:---------------------------------------------------------------------------------------------------------------------------------------------:|
+|         input          | { data: Uint8Array, contentType?: MimeType } |    X     |         | The source of the image to transform. The parameter `contentType` is optional, but should be provided if it is known to speed up performance. |
+|        options         |               TransformOptions               |    X     |         |                                                  The options to use to transform the image.                                                   |
+
+## Transform Options
+```typescript
+export interface TransformOptions {
+  /** Width of resulting image. */
+  width: number;
+  /** Height of resulting image. If width is present, this take priority. */
+  height?: number;
+  /** The content type of the resulting image. (optional, default source type) */
+  contentType?: MimeType;
+  /** How the image should be resized to fit both provided dimensions. (optional, default 'contain') */
+  fit?: ImageFit;
+  /** Position to use when fit is cover or contain. (optional, default 'center') */
+  position?: ImagePosition;
+  /** Background color of resulting image. (optional, default [0x00, 0x00, 0x00, 0x00]) */
+  background?: Color;
+  /** Quality, integer 1-100. (optional, default 80) */
+  quality?: number;
+  /** zlib compression level, 0-9. (optional, default 9) */
+  compressionLevel?: number;
+  /** Number of animation iterations, use 0 for infinite animation. (optional, default 0) */
+  loop?: number;
+  /** Delay between animation frames (in milliseconds). (optional, default 100) */
+  delay?: number;
+  /** The number of pixels to blur the image by. (optional, default null) */
+  blurRadius?: number | null;
+  /** The number of degrees to rotate the image by. (optional, default null) */
+  rotate?: number | null;
+  /** The direction to mirror the image by. (optional, default null) */
+  flip?: FlipDirection | null;
+  /** The location to crop the source image before any other operations are applied. (optional, default null) */
+  crop?: CropOptions | null;
+}
+```
+
+## Other Types
+```typescript
+export enum ImageFit {
+  CONTAIN = "contain",
+  COVER = "cover",
+  FILL = "fill",
+  INSIDE = "inside",
+  OUTSIDE = "outside",
+}
+
+export enum ImagePosition {
+  LEFT = "left",
+  CENTER = "center",
+  RIGHT = "right",
+}
+
+export enum FlipDirection {
+  HORIZONTAL = "horizontal",
+  VERTICAL = "vertical",
+  BOTH = "both",
+}
+
+export interface CropOptions {
+  /** The x position of the upper left pixel. */
+  x: number;
+  /** The y position of the upper left pixel. */
+  y: number;
+  /** The number of pixels wide to crop the image. */
+  width: number;
+  /** The number of pixels high to crop the image. */
+  height: number;
+}
+```

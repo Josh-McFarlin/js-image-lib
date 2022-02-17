@@ -1,0 +1,22 @@
+{
+  "type": "module",
+  "private": true,
+  "name": "basic-example",
+  "description": "An example showing a basic setup on Node.js.",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "npm run dev"
+  },
+  "dependencies": {
+    "js-image-lib": "file:../.."
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
