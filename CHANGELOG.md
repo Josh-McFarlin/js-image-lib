@@ -8,3 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Initial release moving transformation code from Remix-Image
+
+
+## [0.1.0] - 2022-02-17
+
+### Fix
+
+- Fix Rollup issues preventing publishing
