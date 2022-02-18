@@ -1,5 +1,11 @@
 # js-image-lib
 
+![](https://badgen.net/npm/v/js-image-lib)
+![](https://badgen.net/npm/license/js-image-lib)
+![](https://badgen.net/npm/types/js-image-lib)
+![](https://badgen.net/bundlephobia/min/js-image-lib)
+![](https://badgen.net/npm/dt/js-image-lib)
+
 ## 👋 Intro
 
 An image manipulation library using only pure JavaScript
