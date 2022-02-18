@@ -15,6 +15,6 @@ describe("imageTransformer", () => {
           width: 100,
         }
       )
-    ).toThrow("Unsupported file type with magic numbers: 00");
+    ).toThrow("Buffer is not a valid image!");
   });
 });

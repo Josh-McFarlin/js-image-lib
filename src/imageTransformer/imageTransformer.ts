@@ -1,6 +1,6 @@
+import mimeFromBuffer from "mime-tree";
 import { MimeType } from "../types/file";
 import { Transformer } from "../types/transformer";
-import { mimeFromBuffer } from "../utils";
 import { typeHandlers } from "./handlers";
 import { applyOperations } from "./operations";
 
@@ -19,6 +19,9 @@ const supportedOutputs = new Set([
   MimeType.BMP,
 ]);
 
+/**
+ * Transform an image
+ */
 export const imageTransformer: Transformer = (
   { data, contentType: inputContentType = mimeFromBuffer(data) },
   {
@@ -48,16 +51,20 @@ export const imageTransformer: Transformer = (
   const inputHandler = typeHandlers[inputContentType];
   const rgba = inputHandler.decode(data);
 
-  const targetWidth = width || rgba.width * ((height || 0) / rgba.height);
-  const targetHeight = height || rgba.height * ((width || 0) / rgba.width);
+  const targetWidth = Math.round(
+    width || rgba.width * ((height || 0) / rgba.height)
+  );
+  const targetHeight = Math.round(
+    height || rgba.height * ((width || 0) / rgba.width)
+  );
 
   if (targetWidth <= 0 || targetHeight <= 0) {
     throw new Error("At least one dimension must be provided!");
   }
 
   const rawImageData = applyOperations(rgba, {
-    width: Math.round(targetWidth),
-    height: Math.round(targetHeight),
+    width,
+    height,
     rotate,
     flip,
     blurRadius,

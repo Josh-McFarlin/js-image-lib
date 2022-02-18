@@ -10,7 +10,8 @@
     "start": "npm run dev"
   },
   "dependencies": {
-    "js-image-lib": "file:../.."
+    "js-image-lib": "file:../..",
+    "mime-tree": "^0.1.2"
   },
   "engines": {
     "node": ">=14"

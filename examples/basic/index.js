@@ -1,7 +1,7 @@
 import { imageTransformer } from "js-image-lib";
 import fs from "fs";
 import path from "path";
-import { mimeFromBuffer } from "js-image-lib";
+import mimeFromBuffer from "mime-tree";
 
 /**
  * Open a PNG image
