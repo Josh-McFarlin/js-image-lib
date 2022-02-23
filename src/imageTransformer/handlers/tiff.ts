@@ -1,27 +1,23 @@
-import TIFFJS from "utif";
+import { decode } from "decode-tiff";
 import { ImageHandler } from "../../types/transformer";
 
 export const TiffHandler: ImageHandler = {
   decode(buffer) {
-    const ifds = TIFFJS.decode(buffer);
-    if (!ifds || ifds.length < 1) {
-      throw new Error("Invalid TIFF!");
-    }
-    TIFFJS.decodeImage(buffer, ifds[0]);
+    const image = decode(buffer, {
+      singlePage: true,
+    });
 
     return {
-      width: ifds[0].width,
-      height: ifds[0].height,
-      data: TIFFJS.toRGBA8(ifds[0]),
+      width: image.width,
+      height: image.height,
+      data: image.data,
     };
   },
-  encode(image) {
-    const tiffImageData = TIFFJS.encodeImage(
-      image.data,
-      image.width,
-      image.height
-    );
-
-    return new Uint8Array(tiffImageData);
+  encode() {
+    /**
+     * Tiff encoding is not supported because it is an outdated file type
+     * You should use a different file type for your exports
+     */
+    throw new Error("Encoding is not supported for TIFF images!");
   },
 };
