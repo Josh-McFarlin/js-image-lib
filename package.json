@@ -52,7 +52,7 @@
     "decode-tiff": "^0.2.1",
     "get-rgba-palette": "^2.0.1",
     "jpeg-js": "^0.4.3",
-    "mime-tree": "^0.1.3",
+    "mime-tree": "^0.1.4",
     "omggif": "^1.0.10"
   },
   "devDependencies": {

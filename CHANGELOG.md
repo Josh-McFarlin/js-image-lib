@@ -11,7 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Replaced `utif` with `decode-tiff` for smaller size.
+- Replaced `utif` with `decode-tiff` for smaller size
+- Update `mime-tree` to `0.1.4` to fix incorrect mime detection
 
 ## [0.1.5] - 2022-02-17
 
