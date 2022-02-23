@@ -3,7 +3,9 @@ import { ImageHandler } from "../../types/transformer";
 
 export const TiffHandler: ImageHandler = {
   decode(buffer) {
-    const image = decode(buffer);
+    const image = decode(buffer, {
+      singlePage: true,
+    });
 
     return {
       width: image.width,

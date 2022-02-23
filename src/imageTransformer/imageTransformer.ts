@@ -63,8 +63,8 @@ export const imageTransformer: Transformer = (
   }
 
   const rawImageData = applyOperations(rgba, {
-    width,
-    height,
+    width: targetWidth,
+    height: targetHeight,
     rotate,
     flip,
     blurRadius,
