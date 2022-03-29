@@ -1,6 +1,6 @@
 {
   "name": "js-image-lib",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "An image manipulation library using only pure JavaScript",
   "author": "Josh McFarlin <josh@mcfarl.in>",
   "license": "MIT",
