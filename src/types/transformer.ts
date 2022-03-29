@@ -10,9 +10,15 @@ export enum ImageFit {
 }
 
 export enum ImagePosition {
-  LEFT = "left",
   CENTER = "center",
+  BOTTOM = "bottom",
+  LEFT = "left",
+  LEFTBOTTOM = "left bottom",
+  LEFTTOP = "left top",
   RIGHT = "right",
+  RIGHTBOTTOM = "right bottom",
+  RIGHTTOP = "right top",
+  TOP = "top",
 }
 
 export enum FlipDirection {
