@@ -5,10 +5,7 @@ export const flipImage = (
   src: ImageData,
   direction: FlipDirection
 ): ImageData => {
-  if (
-    direction === FlipDirection.HORIZONTAL ||
-    direction === FlipDirection.BOTH
-  ) {
+  if (direction === "horizontal" || direction === "both") {
     for (let row = 0; row < src.height; row += 1) {
       const rowIdx = row * src.width;
 
@@ -25,10 +22,7 @@ export const flipImage = (
     }
   }
 
-  if (
-    direction === FlipDirection.VERTICAL ||
-    direction === FlipDirection.BOTH
-  ) {
+  if (direction === "vertical" || direction === "both") {
     for (let col = 0; col < src.width; col += 1) {
       for (let row = 0; row < src.height / 2; row += 1) {
         const startIdx = (row * src.width + col) << 2;
