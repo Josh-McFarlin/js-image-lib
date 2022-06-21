@@ -1,31 +1,16 @@
 import { MimeType } from "./file";
 import { Color, ImageData } from "./image";
 
-export enum ImageFit {
-  CONTAIN = "contain",
-  COVER = "cover",
-  FILL = "fill",
-  INSIDE = "inside",
-  OUTSIDE = "outside",
-}
+export type ImageFit = "contain" | "cover" | "fill" | "inside" | "outside";
 
-export enum ImagePosition {
-  CENTER = "center",
-  BOTTOM = "bottom",
-  LEFT = "left",
-  LEFTBOTTOM = "left bottom",
-  LEFTTOP = "left top",
-  RIGHT = "right",
-  RIGHTBOTTOM = "right bottom",
-  RIGHTTOP = "right top",
-  TOP = "top",
-}
+export type ImagePositionHorizontal = "left" | "center" | "right";
+export type ImagePositionVertical = "top" | "center" | "bottom";
+export type ImagePosition =
+  | ImagePositionHorizontal
+  | ImagePositionVertical
+  | `${ImagePositionHorizontal} ${ImagePositionVertical}`;
 
-export enum FlipDirection {
-  HORIZONTAL = "horizontal",
-  VERTICAL = "vertical",
-  BOTH = "both",
-}
+export type FlipDirection = "horizontal" | "vertical" | "both";
 
 export interface CropOptions {
   /** The x position of the upper left pixel. */
@@ -48,7 +33,7 @@ export interface TransformOptions {
   /** How the image should be resized to fit both provided dimensions. (optional, default 'contain') */
   fit?: ImageFit;
   /** Position to use when fit is cover or contain. (optional, default 'center') */
-  position?: ImagePosition;
+  position?: ImagePosition | string | number;
   /** Background color of resulting image. (optional, default [0x00, 0x00, 0x00, 0x00]) */
   background?: Color;
   /** Quality, integer 1-100. (optional, default 80) */
