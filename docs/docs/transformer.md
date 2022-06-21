@@ -35,7 +35,7 @@ export interface TransformOptions {
   /** How the image should be resized to fit both provided dimensions. (optional, default 'contain') */
   fit?: ImageFit;
   /** Position to use when fit is cover or contain. (optional, default 'center') */
-  position?: ImagePosition;
+  position?: ImagePosition | string | number;
   /** Background color of resulting image. (optional, default [0x00, 0x00, 0x00, 0x00]) */
   background?: Color;
   /** Quality, integer 1-100. (optional, default 80) */
@@ -59,25 +59,16 @@ export interface TransformOptions {
 
 ## Other Types
 ```typescript
-export enum ImageFit {
-  CONTAIN = "contain",
-  COVER = "cover",
-  FILL = "fill",
-  INSIDE = "inside",
-  OUTSIDE = "outside",
-}
+export type ImageFit = "contain" | "cover" | "fill" | "inside" | "outside";
 
-export enum ImagePosition {
-  LEFT = "left",
-  CENTER = "center",
-  RIGHT = "right",
-}
+export type ImagePositionHorizontal = "left" | "center" | "right";
+export type ImagePositionVertical = "top" | "center" | "bottom";
+export type ImagePosition =
+  | ImagePositionHorizontal
+  | ImagePositionVertical
+  | `${ImagePositionHorizontal} ${ImagePositionVertical}`;
 
-export enum FlipDirection {
-  HORIZONTAL = "horizontal",
-  VERTICAL = "vertical",
-  BOTH = "both",
-}
+export type FlipDirection = "horizontal" | "vertical" | "both";
 
 export interface CropOptions {
   /** The x position of the upper left pixel. */
