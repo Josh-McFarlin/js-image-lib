@@ -1,4 +1,4 @@
-import { imageTransformer } from "js-image-lib";
+import ImageTransformer from "js-image-lib";
 import fs from "fs";
 import path from "path";
 import mimeFromBuffer from "mime-tree";
@@ -15,16 +15,9 @@ const image = new Uint8Array(buffer);
 /**
  * Resize the image to 200px wide and convert it to a JPEG
  */
-const transformedImage = imageTransformer(
-  {
-    data: image,
-    contentType,
-  },
-  {
-    width: 200,
-    contentType: "image/jpeg",
-  }
-);
+const transformedImage = new ImageTransformer(image, contentType)
+  .resize(200)
+  .toBuffer("image/jpeg");
 
 /**
  * Save the JPEG image

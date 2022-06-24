@@ -12,7 +12,7 @@ An image manipulation library using only pure JavaScript
 This library lets you:
 * Resize images to different sizes
 * Convert between the following file types: `png`, `jpeg`, `gif`, `bmp`, and `tiff`
-* Apply operations like `crop`, `rotate`, `blur`, and `flip`
+* Apply operations like `resize`, `crop`, `rotate`, `blur`, and `flip`
 
 This library uses pure browser-compatible JavaScript, relying on no Node packages.
 This means js-image-lib can be run anywhere you use JavaScript!

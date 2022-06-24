@@ -1,4 +1,4 @@
-import { ImageData } from "../../types/image";
+import { Color, ImageData } from "../../types/image";
 
 const createTranslationFunction =
   (deltaX: number, deltaY: number) => (x: number, y: number) => ({
@@ -6,12 +6,20 @@ const createTranslationFunction =
     y: y + deltaY,
   });
 
-export const rotateImage = (src: ImageData, degrees: number): ImageData => {
+export const rotateImage = (
+  src: ImageData,
+  degrees: number,
+  background: Color
+): void => {
   const rad = ((degrees % 360) * Math.PI) / 180;
   const cosine = Math.cos(rad);
   const sine = Math.sin(rad);
 
   const dstBuffer = new Uint8Array(src.data.length);
+
+  for (let i = 0; i < dstBuffer.length; i += 4) {
+    dstBuffer.set(background, i);
+  }
 
   const translate2Cartesian = createTranslationFunction(
     -(src.width / 2),
@@ -40,14 +48,9 @@ export const rotateImage = (src: ImageData, degrees: number): ImageData => {
         const srcIdx = ((src.width * (source.y | 0) + source.x) | 0) << 2;
         const pixelRGBA = src.data.subarray(srcIdx, srcIdx + 4);
         dstBuffer.set(pixelRGBA, dstIdx);
-      } else {
-        // reset off-image pixels
-        dstBuffer.fill(0, dstIdx, dstIdx + 4);
       }
     }
   }
 
   src.data = dstBuffer;
-
-  return src;
 };

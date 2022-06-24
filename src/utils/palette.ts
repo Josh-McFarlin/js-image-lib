@@ -1,5 +1,5 @@
 import getPalette from "get-rgba-palette";
-import type { Color } from "../types";
+import type { Color } from "../types/image";
 
 export const rgbToHex = (r: number, g: number, b: number): number =>
   (r << 16) + (g << 8) + b;
@@ -7,21 +7,47 @@ export const rgbToHex = (r: number, g: number, b: number): number =>
 export const generatePalette = (buffer: Uint8Array, count: number): Color[] => {
   const powCount = Math.pow(2, Math.ceil(Math.log(count) / Math.log(2)));
 
-  const colors: Color[] = getPalette(buffer, count).map((color) => [
+  let colors: Color[] = getPalette(buffer, count).map((color) => [
     color[0],
     color[1],
     color[2],
     0xff,
   ]);
 
+  if (colors.length === 0) {
+    colors = getPalette(buffer, count, 10, () => true).map((color) => [
+      color[0],
+      color[1],
+      color[2],
+      0xff,
+    ]);
+  }
+
   if (colors.length < powCount) {
-    const lastVal = colors[colors.length - 1];
+    const lastVal =
+      colors.length > 0
+        ? colors[colors.length - 1]
+        : ([0x00, 0x00, 0x00, 0x00] as Color);
     const oldLen = colors.length;
     colors.length = powCount;
     colors.fill(lastVal, oldLen, powCount);
   }
 
   colors[colors.length - 1] = [0x00, 0x00, 0x00, 0x00];
+
+  for (let i = 0; i < colors.length; i += 1) {
+    for (let j = 0; j < 4; j += 1) {
+      const hex = colors[i][j];
+
+      if (hex == null || Number.isNaN(hex)) {
+        colors[i][j] = 0x0;
+      } else if (hex < 0x0) {
+        colors[i][j] = 0x0;
+      } else if (hex > 0xff) {
+        colors[i][j] = 0xff;
+      }
+    }
+  }
 
   return colors;
 };

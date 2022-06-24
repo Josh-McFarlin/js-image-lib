@@ -1,19 +1,28 @@
-import { ImageData } from "../../types/image";
-import { CropOptions } from "../../types/transformer";
+import { Color, ImageData } from "../../types/image";
 
 const ternaryPercent = (num: number, full: number) =>
   num < 1 ? Math.round(num * full) : num;
 
 export const cropImage = (
   src: ImageData,
-  cropOptions: CropOptions
-): ImageData => {
+  cropOptions: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  },
+  background: Color
+): void => {
   const startX = ternaryPercent(cropOptions.x, src.width);
   const startY = ternaryPercent(cropOptions.y, src.height);
   const cropWidth = ternaryPercent(cropOptions.width, src.width);
   const cropHeight = ternaryPercent(cropOptions.height, src.height);
 
   const dstBuffer = new Uint8Array(cropWidth * cropHeight * 4);
+
+  for (let i = 0; i < dstBuffer.length; i += 4) {
+    dstBuffer.set(background, i);
+  }
 
   const deltaX = cropWidth - startX;
   const deltaY = cropHeight - startY;
@@ -30,6 +39,4 @@ export const cropImage = (
   src.data = dstBuffer;
   src.width = cropWidth;
   src.height = cropHeight;
-
-  return src;
 };

@@ -3,6 +3,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Breaking
+
+- Replaced `imageTransformer` function with default exported `ImageTransformer` class
+- Replaced `ImageFit`, `ImagePosition`, and `FlipDirection` enums with string union types
+
+### Added
+
+- Implemented `fit` and `position` when resizing images
+- Created a `ImageTransformer` class that uses methods for apply image operations
+
+### Fixed
+
+- Fixed importing jpegs and pngs with alternate color schemes
+- Fixed exporting files in content types that do not support transparency
+
 ## [0.2.0] - 2022-06-21
 
 ### Changed

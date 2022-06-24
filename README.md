@@ -13,7 +13,7 @@ An image manipulation library using only pure JavaScript
 This library lets you:
 * Resize images to different sizes
 * Convert between the following file types: `png`, `jpeg`, `gif`, `bmp`, and `tiff`
-* Apply operations like `crop`, `rotate`, `blur`, and `flip`
+* Apply operations like `resize`, `crop`, `rotate`, `blur`, and `flip`
 
 This library uses pure browser-compatible JavaScript, relying on no Node packages.
 This means js-image-lib can be run anywhere you use JavaScript!
@@ -37,54 +37,34 @@ yarn add js-image-lib
 Retrieve your image as a Uint8Array, then transform it with `imageTransformer` by providing the image and the options to use.
 
 ```typescript jsx
-import { imageTransformer, MimeType } from "js-image-lib";
+import ImageTransformer from "js-image-lib";
 
-const image: Uint8Array = ...;
-const contentType: MimeType = ...;
-const transformOptions = {
-  width: 100,
-};
+// Get your image to transform on Node
+const inputJpeg = new Uint8Array(fs.readFileSync("./my-image.jpeg"));
 
-const newImage = imageTransformer({
-  data: image,
-  contentType
-}, transformOptions);
-```
+// Or get your image to transform in the browser using fetch
+const imageResponse = await fetch(url, {
+  headers: {
+    accept: "image/*",
+  },
+});
+const arrBuff = await imageResponse.arrayBuffer();
+const inputJpeg = new Uint8Array(arrBuff);
 
-**Note**: The parameter `contentType` is optional, but should be provided if it is known to speed up performance.
+// Create ImageTransformer with your image
+const transformer = new ImageTransformer(inputJpeg);
 
-#### Transform Options
-```typescript
-export interface TransformOptions {
-  /** Width of resulting image. */
-  width: number;
-  /** Height of resulting image. If width is present, this take priority. */
-  height?: number;
-  /** The content type of the resulting image. (optional, default source type) */
-  contentType?: MimeType;
-  /** How the image should be resized to fit both provided dimensions. (optional, default 'contain') */
-  fit?: ImageFit;
-  /** Position to use when fit is cover or contain. (optional, default 'center') */
-  position?: ImagePosition;
-  /** Background color of resulting image. (optional, default [0x00, 0x00, 0x00, 0x00]) */
-  background?: Color;
-  /** Quality, integer 1-100. (optional, default 80) */
-  quality?: number;
-  /** zlib compression level, 0-9. (optional, default 9) */
-  compressionLevel?: number;
-  /** Number of animation iterations, use 0 for infinite animation. (optional, default 0) */
-  loop?: number;
-  /** Delay between animation frames (in milliseconds). (optional, default 100) */
-  delay?: number;
-  /** The number of pixels to blur the image by. (optional, default null) */
-  blurRadius?: number | null;
-  /** The number of degrees to rotate the image by. (optional, default null) */
-  rotate?: number | null;
-  /** The direction to mirror the image by. (optional, default null) */
-  flip?: FlipDirection | null;
-  /** The location to crop the source image before any other operations are applied. (optional, default null) */
-  crop?: CropOptions | null;
-}
+transformer.blur(...);
+transformer.crop(...);
+transformer.flip(...);
+transformer.resize(...);
+transformer.rotate(...);
+
+// Operations can be done in sequence
+transformer.blur(5).rotate(45).flip("both");
+
+// Finally, export your image
+const exported = transformer.toBuffer("image/jpeg");
 ```
 
 ## Docs

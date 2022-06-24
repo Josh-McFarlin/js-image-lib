@@ -2,7 +2,8 @@ declare module "get-rgba-palette" {
   const getPalette: (
     image: Uint8Array,
     count?: number,
-    quality?: number
+    quality?: number,
+    filter?: (pixels: number[], index: number) => boolean
   ) => [number, number, number][];
 
   export default getPalette;

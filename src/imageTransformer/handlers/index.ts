@@ -1,4 +1,4 @@
-import { MimeType } from "../../types";
+import { MimeType } from "../../types/file";
 import { ImageHandler } from "../../types/transformer";
 import { BmpHandler } from "./bmp";
 import { GifHandler } from "./gif";

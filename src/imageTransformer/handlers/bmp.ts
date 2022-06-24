@@ -27,7 +27,7 @@ export const BmpHandler: ImageHandler = {
   },
   encode(image) {
     const bmpImageData = BMPJS.encode({
-      bitPP: 16,
+      bitPP: 32,
       width: image.width,
       height: image.height,
       data: rgbaToABGR(image.data),

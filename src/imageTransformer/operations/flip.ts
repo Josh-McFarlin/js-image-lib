@@ -1,10 +1,7 @@
 import { ImageData } from "../../types/image";
 import { FlipDirection } from "../../types/transformer";
 
-export const flipImage = (
-  src: ImageData,
-  direction: FlipDirection
-): ImageData => {
+export const flipImage = (src: ImageData, direction: FlipDirection): void => {
   if (direction === "horizontal" || direction === "both") {
     for (let row = 0; row < src.height; row += 1) {
       const rowIdx = row * src.width;
@@ -36,6 +33,4 @@ export const flipImage = (
       }
     }
   }
-
-  return src;
 };

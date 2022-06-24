@@ -8,7 +8,7 @@ export const PngHandler: ImageHandler = {
     return {
       width: image.width,
       height: image.height,
-      data: new Uint8Array(image.data),
+      data: new Uint8Array(PNGJS.toRGBA8(image)[0]),
     };
   },
   encode(image) {

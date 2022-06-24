@@ -4,96 +4,115 @@ sidebar_position: 2
 
 # Use Transformer
 
+## 1. Retrieving Images
+
 To use the image transformer, you must first get your image encoded as an Uint8Array.
 This can be accomplished various ways, such as:
 
 ### Fetch
 ```typescript
-const fetchResolver = async (url) => {
-  const imageResponse = await fetch(url, {
-    headers: {
-      accept: "image/*",
-    },
-  });
-  const arrBuff = await imageResponse.arrayBuffer();
+const imageResponse = await fetch(url, {
+  headers: {
+    accept: "image/*",
+  },
+});
+const arrBuff = await imageResponse.arrayBuffer();
 
-  const buffer = new Uint8Array(arrBuff);
-  const contentType = imageResponse.headers.get("content-type");
-
-  return {
-    buffer,
-    contentType,
-  };
-};
+const image = new Uint8Array(arrBuff);
 ```
 
 ### File
 ```typescript
 import fs from "fs";
 import path from "path";
-import { mimeFromBuffer } from "js-image-lib";
 
-const fsResolver = async (filePath) => {
-  const buffer = fs.readFileSync(filePath);
-  const contentType = mimeFromBuffer(buffer);
-
-  return {
-    buffer: new Uint8Array(buffer),
-    contentType,
-  };
-};
+const image = new Uint8Array(fs.readFileSync(filePath));
 ```
 
-## Transform
+## 2. Create ImageTransformer
+Once, you have your image as a Uint8Array, create a new instance of ImageTransformer.
 
-Once, you have your image as a Uint8Array, transform it with `imageTransformer` by providing the image and the options to use.
-```typescript jsx
-import { imageTransformer, MimeType } from "js-image-lib";
+If you only have the image data:
+
+```typescript
+import ImageTransformer, { OutputOptions } from "js-image-lib";
+
+const image: Uint8Array = ...;
+const outputOptions: Partial<OutputOptions> = {}; // optional
+
+const transformer = new ImageTransformer(image, outputOptions);
+```
+
+If you know the content type of your image, you can pass it into the constructor to speed up initialization.
+
+```typescript
+import ImageTransformer, { MimeType, OutputOptions } from "js-image-lib";
 
 const image: Uint8Array = ...;
 const contentType: MimeType = ...;
-const transformOptions = {
-  width: 100,
-};
+const outputOptions: Partial<OutputOptions> = {}; // optional
 
-const newImage = imageTransformer({
-  data: image,
-  contentType
-}, transformOptions);
+const transformer = new ImageTransformer(image, contentType, outputOptions);
 ```
 
-**Note**: The parameter `contentType` is optional, but should be provided if it is known to speed up performance.
+In both constructors, you can add a final optional parameter `outputOptions` specifying the settings used when exporting your image.
+Note: these settings are not used by every file format while exporting, and may have no effect. 
 
-## Transform Options
 ```typescript
-export interface TransformOptions {
-  /** Width of resulting image. */
-  width: number;
-  /** Height of resulting image. If width is present, this take priority. */
-  height?: number;
-  /** The content type of the resulting image. (optional, default source type) */
-  contentType?: MimeType;
-  /** How the image should be resized to fit both provided dimensions. (optional, default 'contain') */
-  fit?: ImageFit;
-  /** Position to use when fit is cover or contain. (optional, default 'center') */
-  position?: ImagePosition | string | number;
+export interface OutputOptions {
   /** Background color of resulting image. (optional, default [0x00, 0x00, 0x00, 0x00]) */
-  background?: Color;
+  background: Color;
   /** Quality, integer 1-100. (optional, default 80) */
-  quality?: number;
+  quality: number;
   /** zlib compression level, 0-9. (optional, default 9) */
-  compressionLevel?: number;
+  compressionLevel: number;
   /** Number of animation iterations, use 0 for infinite animation. (optional, default 0) */
-  loop?: number;
+  loop: number;
   /** Delay between animation frames (in milliseconds). (optional, default 100) */
-  delay?: number;
-  /** The number of pixels to blur the image by. (optional, default null) */
-  blurRadius?: number | null;
-  /** The number of degrees to rotate the image by. (optional, default null) */
-  rotate?: number | null;
-  /** The direction to mirror the image by. (optional, default null) */
-  flip?: FlipDirection | null;
-  /** The location to crop the source image before any other operations are applied. (optional, default null) */
-  crop?: CropOptions | null;
+  delay: number;
 }
 ```
+
+## 3. Transform
+
+Once, you have created your ImageTransformer, you can apply operations to it.
+```typescript
+import ImageTransformer from "js-image-lib";
+
+const transformer = new ImageTransformer(image);
+
+transformer.blur(...);
+transformer.crop(...);
+transformer.flip(...);
+transformer.resize(...);
+transformer.rotate(...);
+
+// Operations can be done in sequence
+transformer.blur(5).rotate(45).flip("both");
+```
+
+To learn more about the supported operations on ImageTransformer, read the [transformer documentation](../transformer.md).
+
+## 4. Export
+
+Finally, export your image as a Uint8Array by calling `toBuffer` on your ImageTransformer.
+
+```typescript
+import ImageTransformer from "js-image-lib";
+
+const transformer = new ImageTransformer(image);
+
+const exported: Uint8Array = transformer.toBuffer()
+```
+
+You can optionally provide a content type to export your image to.
+
+```typescript
+import ImageTransformer, { MimeType } from "js-image-lib";
+
+const transformer = new ImageTransformer(image);
+
+const exported: Uint8Array = transformer.toBuffer(MimeType.PNG)
+```
+
+If a content type is not provided, your image will be exported in the same content type it was originally provided in.

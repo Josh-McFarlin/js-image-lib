@@ -3,7 +3,10 @@ import { ImageHandler } from "../../types/transformer";
 
 export const JpegHandler: ImageHandler = {
   decode(buffer) {
-    const image = jpeg.decode(buffer, { useTArray: true });
+    const image = jpeg.decode(buffer, {
+      useTArray: true,
+      colorTransform: true,
+    });
 
     return {
       width: image.width,

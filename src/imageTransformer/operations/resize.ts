@@ -20,53 +20,50 @@
  * THE SOFTWARE.
  */
 
-import { ImageData } from "../../types/image";
+import { Color, ImageData } from "../../types/image";
+import { ImageFit, ImagePosition } from "../../types/transformer";
+import { getFrameDimensions, getImageDimensions } from "../../utils/sizing";
 
-export const resizeImage = (
+const interpolate = (
+  k: number,
+  kMin: number,
+  vMin: number,
+  kMax: number,
+  vMax: number
+) => {
+  // special case - k is integer
+  if (kMin === kMax) {
+    return vMin;
+  }
+
+  return Math.round((k - kMin) * vMax + (kMax - k) * vMin);
+};
+
+const assign = (
   src: ImageData,
-  width: number,
-  height: number
-): ImageData => {
-  const wSrc = src.width;
-  const hSrc = src.height;
+  dstBuffer: Uint8Array,
+  pos: number,
+  x: number,
+  xMin: number,
+  xMax: number,
+  y: number,
+  yMin: number,
+  yMax: number,
+  background: Color
+) => {
+  const result = [0x0, 0x0, 0x0, 0x0];
 
-  const dstBuffer = new Uint8Array(width * height * 4);
-
-  const interpolate = (
-    k: number,
-    kMin: number,
-    vMin: number,
-    kMax: number,
-    vMax: number
-  ) => {
-    // special case - k is integer
-    if (kMin === kMax) {
-      return vMin;
-    }
-
-    return Math.round((k - kMin) * vMax + (kMax - k) * vMin);
-  };
-
-  const assign = (
-    pos: number,
-    offset: number,
-    x: number,
-    xMin: number,
-    xMax: number,
-    y: number,
-    yMin: number,
-    yMax: number
-  ) => {
-    let posMin = (yMin * wSrc + xMin) * 4 + offset;
-    let posMax = (yMin * wSrc + xMax) * 4 + offset;
+  for (let offset = 0; offset < 4; offset += 1) {
+    let posMin = (yMin * src.width + xMin) * 4 + offset;
+    let posMax = (yMin * src.width + xMax) * 4 + offset;
     const vMin = interpolate(x, xMin, src.data[posMin], xMax, src.data[posMax]);
 
     // special case, y is integer
     if (yMax === yMin) {
-      dstBuffer[pos + offset] = vMin;
+      result[offset] = vMin;
     } else {
-      posMin = (yMax * wSrc + xMin) * 4 + offset;
-      posMax = (yMax * wSrc + xMax) * 4 + offset;
+      posMin = (yMax * src.width + xMin) * 4 + offset;
+      posMax = (yMax * src.width + xMax) * 4 + offset;
       const vMax = interpolate(
         x,
         xMin,
@@ -75,32 +72,88 @@ export const resizeImage = (
         src.data[posMax]
       );
 
-      dstBuffer[pos + offset] = interpolate(y, yMin, vMin, yMax, vMax);
+      result[offset] = interpolate(y, yMin, vMin, yMax, vMax);
     }
-  };
+  }
 
-  for (let i = 0; i < height; i++) {
-    for (let j = 0; j < width; j++) {
-      const posDst = (i * width + j) * 4;
+  if (result.every((i) => i === 0)) {
+    dstBuffer.set(background, pos);
+  } else {
+    dstBuffer.set(result, pos);
+  }
+};
+
+export const resizeImage = (
+  src: ImageData,
+  width: number | null,
+  height: number | null,
+  resizeOptions: {
+    fit: ImageFit;
+    position: ImagePosition;
+  },
+  background: Color
+): void => {
+  if (!width && !height) {
+    throw new Error("At least one dimension must be provided!");
+  }
+
+  const { frameWidth, frameHeight } = getFrameDimensions(
+    src.width,
+    src.height,
+    width,
+    height,
+    resizeOptions.fit
+  );
+
+  const { imageWidth, imageHeight, xOffset, yOffset } = getImageDimensions(
+    src.width,
+    src.height,
+    frameWidth,
+    frameHeight,
+    resizeOptions.fit,
+    resizeOptions.position
+  );
+
+  const dstBuffer = new Uint8Array(frameWidth * frameHeight * 4);
+
+  for (let i = 0; i < dstBuffer.length; i += 4) {
+    dstBuffer.set(background, i);
+  }
+
+  for (
+    let row = 0;
+    row < imageHeight && row + yOffset < frameHeight;
+    row += 1
+  ) {
+    for (
+      let col = 0;
+      col < imageWidth && col + xOffset < frameWidth;
+      col += 1
+    ) {
+      if (
+        col + xOffset < 0 ||
+        col + xOffset >= frameWidth ||
+        row + yOffset < 0 ||
+        row + yOffset >= frameHeight
+      ) {
+        continue;
+      }
+
+      const posDst = ((row + yOffset) * frameWidth + (col + xOffset)) * 4;
       // x & y in src coordinates
-      const x = (j * wSrc) / width;
+      const x = (col * src.width) / imageWidth;
       const xMin = Math.floor(x);
-      const xMax = Math.min(Math.ceil(x), wSrc - 1);
+      const xMax = Math.min(Math.ceil(x), src.width - 1);
 
-      const y = (i * hSrc) / height;
+      const y = (row * src.height) / imageHeight;
       const yMin = Math.floor(y);
-      const yMax = Math.min(Math.ceil(y), hSrc - 1);
+      const yMax = Math.min(Math.ceil(y), src.height - 1);
 
-      assign(posDst, 0, x, xMin, xMax, y, yMin, yMax);
-      assign(posDst, 1, x, xMin, xMax, y, yMin, yMax);
-      assign(posDst, 2, x, xMin, xMax, y, yMin, yMax);
-      assign(posDst, 3, x, xMin, xMax, y, yMin, yMax);
+      assign(src, dstBuffer, posDst, x, xMin, xMax, y, yMin, yMax, background);
     }
   }
 
   src.data = dstBuffer;
-  src.width = width;
-  src.height = height;
-
-  return src;
+  src.width = frameWidth;
+  src.height = frameHeight;
 };

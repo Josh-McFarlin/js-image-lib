@@ -33,7 +33,7 @@
     "README.md"
   ],
   "scripts": {
-    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss}\"",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json}\"",
     "lint": "eslint --fix --ext ts --ext tsx --ext js --ext jsx .",
     "prebuild": "rimraf coverage build tmp",
     "typecheck": "tsc --project tsconfig.json --noEmit",

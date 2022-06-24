@@ -169,7 +169,7 @@ const boxesForGauss = (sigma: number, n: number) => {
   return sizes;
 };
 
-export const blurImage = (src: ImageData, blurRadius: number): ImageData => {
+export const blurImage = (src: ImageData, blurRadius: number): void => {
   const dtChannelsOld = splitDataTextureIntoChannelArrays(
     src.data,
     src.width,
@@ -216,6 +216,4 @@ export const blurImage = (src: ImageData, blurRadius: number): ImageData => {
     dtChannelsBlurred[2],
     dtChannelsBlurred[3]
   );
-
-  return src;
 };
