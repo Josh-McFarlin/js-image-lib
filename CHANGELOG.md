@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Docs
+
+- Added missing documentation to `ImageTransformer` methods
+
 ## [1.0.0] - 2022-06-24
 
 ### Breaking
@@ -13,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Implemented `fit` and `position` when resizing images
-- Created a `ImageTransformer` class that uses methods for apply image operations
+- Created a `ImageTransformer` class that uses methods for applying image operations
 
 ### Fixed
 

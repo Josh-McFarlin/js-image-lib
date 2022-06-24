@@ -131,15 +131,26 @@ export default class ImageTransformer {
   /**
    * Resize the image.
    * @param width Width of resulting image or null.
-   * @param height Height of resulting image or null. If width is present, this takes priority. (optional, default null)
    * @param options Optional settings used to adjust the fit and placement of the image within its frame.
    */
   resize(width: number, options?: ResizeOptions): ImageTransformer;
+  /**
+   * Resize the image.
+   * @param width Width of resulting image or null.
+   * @param height Height of resulting image or null. If width is present, this takes priority. (optional, default null)
+   * @param options Optional settings used to adjust the fit and placement of the image within its frame.
+   */
   resize(
     width: null,
     height: number,
     options?: ResizeOptions
   ): ImageTransformer;
+  /**
+   * Resize the image.
+   * @param width Width of resulting image or null.
+   * @param height Height of resulting image or null. If width is present, this takes priority. (optional, default null)
+   * @param options Optional settings used to adjust the fit and placement of the image within its frame.
+   */
   resize(
     width: number,
     height: number,
